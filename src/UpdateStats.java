@@ -14,7 +14,7 @@ import java.sql.PreparedStatement;
 public class UpdateStats {
     public static void main(String[] args) {
         final GameLog log = new GameLog();
-        final LogFileReader reader = new LogFileReader("20140709.log");
+        final LogFileReader reader = new LogFileReader(args[0]);
 
         String[] line;
         while ((line = reader.getNext()) != null) {
@@ -30,8 +30,8 @@ public class UpdateStats {
         ResultSet rs = null;
         try {
             postgres = DriverManager.getConnection(
-                    "jdbc:postgresql://10.0.0.101/cod2stats",
-                    "cod2stats", "cod2stats");
+                    "jdbc:postgresql://" + args[1] + "/" + args[2],
+                    args[3], args[4]);
 
             for (Round round : log.getAllRounds()) {
                 //# Insert round and get the round ID out
@@ -69,15 +69,16 @@ public class UpdateStats {
                 }
 
                 // Populate the death table
+                stm = postgres.prepareStatement("INSERT INTO deaths (round_id, dead_id, killer_id, weapon) " +
+                        "VALUES (?, ?, ?, ?)");
                 for (Death death : round.getDeaths()) {
-                    stm = postgres.prepareStatement("INSERT INTO deaths (round_id, dead_id, killer_id, weapon) " +
-                            "VALUES (?, ?, ?, ?)");
                     stm.setInt(1, roundid);
                     stm.setInt(2, death.dead.id);
                     stm.setInt(3, death.killer.id);
                     stm.setString(4, death.weaponname);
-                    stm.executeUpdate();
+                    stm.addBatch();
                 }
+                stm.executeBatch();
             }
 
         } catch (SQLException e) {
