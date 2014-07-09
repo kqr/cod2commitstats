@@ -1,1 +1,1 @@
-Depends on opencsv and sqlite-jdbc, where the latter isn't used yet
+Depends on opencsv and postgresql jdbc

@@ -14,21 +14,29 @@ public class UpdateStats {
         String[] line;
         while ((line = reader.getNext()) != null) {
             try {
-                log.add(line);
+                log.addLine(line);
             } catch (ParseError e) {
                 //Commented to make it shut up
-                //System.out.println(e);
+                e.printStackTrace();
             }
         }
 
-        System.out.print("All players: ");
-        for (String p : log.getAllPlayers()) {
-            System.out.print(p);
-            System.out.print(" ");
-        }
-        System.out.println("");
-        for (Round r : log.getAllRounds()) {
-            System.out.println(r.summary());
+        for (Round round : log.getAllRounds()) {
+            //PLAYERS (playername, playtime)
+            for (Player player : round.getPlayers()) {
+                // Insert new players
+                // update playtime for all players
+            }
+
+            //ROUNDS (roundid, mapname, timestamp)
+            //# Insert once and get the ID out
+            //# Timestamp is actual date+timestamp (calculated from file name and log TS)
+
+            //DEATHS (roundid, deadname, killername, weaponname)
+            //# Insert for every death in the round
+            //
+            //ROUNDPLAYERS (roundid, playername, playtime)
+            //# Insert for every player in the round
         }
 
     }
@@ -50,11 +58,13 @@ class LogFileReader {
 
     public String[] getNext() {
         try {
-            String line = file.readLine();
-            if (line != null) {
-                return parser.parseLine(line.trim());
-            } else {
-                return null;
+            while (true) {
+                String line = file.readLine();
+                if (line != null && !line.matches("^[0-9]+:[0-9][0-9] -+$")) {
+                    return parser.parseLine(line.trim());
+                } else if (line == null) {
+                    return null;
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

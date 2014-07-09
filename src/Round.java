@@ -1,35 +1,52 @@
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Collection;
 
 public class Round {
-    private Set<String> players = new HashSet<>();
     private String mapname;
-    private int starttime;
-    private int endtime;
-    public String winner;
+    private Map<String, Player> players = new HashMap<>();
+    private ArrayList<Death> deaths = new ArrayList<>();
+    int starttime;
+    public boolean active = false;
 
-    public Round(String map, int started) {
+    public Round(String map, int time) {
         mapname = map;
-        starttime = started;
+        starttime = time;
     }
 
-    public void join(String player) {
-        players.add(player);
+    public void join(String name, int time) {
+        if (players.containsKey(name)) {
+            players.get(name).join(time);
+        } else {
+            Player p = new Player(name);
+            players.put(name, p);
+            p.join(time);
+        }
     }
 
-    public void end(int ended) {
-        endtime = ended;
+    public void quit(String name, int time) {
+        players.get(name).quit(time);
     }
 
-    public String summary() {
-        return getDuration()/60 + " minutes played on " + mapname + " where " + winner + " won!";
+    public void death(String dead, String killer, String weaponname) {
+        deaths.add(new Death(dead, killer, weaponname));
+        active = true;
     }
 
-    public int getDuration() {
-        return endtime - starttime;
+    public void end(int time) {
+        for (Player p : players.values()) {
+            if (p.online()) {
+                p.quit(time);
+            }
+        }
     }
 
-    public Set<String> getPlayers() {
-        return players;
+    public String getMapname() {
+        return mapname;
+    }
+
+    public Collection<Player> getPlayers() {
+        return players.values();
     }
 }
