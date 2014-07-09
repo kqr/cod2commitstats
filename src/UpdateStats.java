@@ -5,11 +5,7 @@ import java.io.FileReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.PreparedStatement;
+import java.sql.*;
 
 public class UpdateStats {
     public static void main(String[] args) {
@@ -74,7 +70,11 @@ public class UpdateStats {
                 for (Death death : round.getDeaths()) {
                     stm.setInt(1, roundid);
                     stm.setInt(2, death.dead.id);
-                    stm.setInt(3, death.killer.id);
+                    if (death.killer == null) {
+                        stm.setNull(3, Types.INTEGER);
+                    } else {
+                        stm.setInt(3, death.killer.id);
+                    }
                     stm.setString(4, death.weaponname);
                     stm.addBatch();
                 }
