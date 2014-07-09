@@ -21,4 +21,4 @@ Run as
 
     java Updatestats <log file> <postgres server> <database> <username> <password>
 
-Create the databases as shown in `postgres-tables.sql` first!
+Create the tables as shown in `postgres-tables.sql` first!
