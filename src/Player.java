@@ -3,6 +3,7 @@ public class Player {
     public String name;
     private int joinTime = -1;
     private int timePlayed = 0;
+    public int id = -1;
 
     public Player(String name) {
         this.name = name;

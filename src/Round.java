@@ -30,7 +30,7 @@ public class Round {
     }
 
     public void death(String dead, String killer, String weaponname) {
-        deaths.add(new Death(dead, killer, weaponname));
+        deaths.add(new Death(players.get(dead), players.get(killer), weaponname));
         active = true;
     }
 
@@ -48,5 +48,9 @@ public class Round {
 
     public Collection<Player> getPlayers() {
         return players.values();
+    }
+
+    public ArrayList<Death> getDeaths() {
+        return deaths;
     }
 }
