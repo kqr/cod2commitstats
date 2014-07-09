@@ -1,12 +1,6 @@
-import org.sqlite.JDBC;
+import au.com.bytecode.opencsv.CSVParser;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
-import au.com.bytecode.opencsv.CSVReader;
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,49 +8,60 @@ import java.io.IOException;
 
 public class UpdateStats {
     public static void main(String[] args) {
-        GameLog log = new GameLog();
-        WrappedCSVReader reader = new WrappedCSVReader("20140709.log");
+        final GameLog log = new GameLog();
+        final LogFileReader reader = new LogFileReader("20140709.log");
 
         String[] line;
         while ((line = reader.getNext()) != null) {
             try {
                 log.add(line);
             } catch (ParseError e) {
-                // Commented to make it shut up
+                //Commented to make it shut up
                 //System.out.println(e);
             }
         }
 
-        for (String p : log.getPlayers()) {
-            System.out.println(p);
+        System.out.print("All players: ");
+        for (String p : log.getAllPlayers()) {
+            System.out.print(p);
+            System.out.print(" ");
+        }
+        System.out.println("");
+        for (Round r : log.getAllRounds()) {
+            System.out.println(r.summary());
         }
 
     }
 }
 
 
-class WrappedCSVReader {
-    CSVReader reader;
-    public WrappedCSVReader(String fn) {
+class LogFileReader {
+    BufferedReader file;
+    final CSVParser parser = new CSVParser(';', '"', '&');
+
+    public LogFileReader(final String fn) {
         try {
-            reader = new CSVReader(new FileReader("20140709.log"), ';');
+            file = new BufferedReader(new FileReader(fn));
         } catch (FileNotFoundException e) {
-            System.out.println(e);
+            e.printStackTrace();
             System.exit(1);
         }
     }
 
     public String[] getNext() {
-        String[] line = new String[0];
-
-        while (true) {
-            try {
-                line = reader.readNext();
-                return line;
-            } catch (IOException e) {
-                System.out.println(e);
+        try {
+            String line = file.readLine();
+            if (line != null) {
+                return parser.parseLine(line.trim());
+            } else {
+                return null;
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(1);
         }
+
+        return null;
     }
 }
 
