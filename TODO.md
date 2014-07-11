@@ -1,12 +1,6 @@
 
-
-
 TODO
 ====
-
- *  Per-round efficacy, which is kills^2/seconds_played
-
- *  Headshot column
 
  *  Add a flag `--create-tables` that creates the necessary tables if they
     don't exist.

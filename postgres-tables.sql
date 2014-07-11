@@ -16,7 +16,8 @@ CREATE TABLE roundplayers
   id serial PRIMARY KEY,
   round_id int REFERENCES rounds(id),
   player_id int REFERENCES players(id),
-  playtime interval NOT NULL
+  playtime interval NOT NULL,
+  efficacy double precision DEFAULT 0
 );
 
 CREATE TABLE deaths
@@ -25,6 +26,7 @@ CREATE TABLE deaths
   round_id int REFERENCES rounds(id),
   dead_id int REFERENCES players(id),
   killer_id int REFERENCES players(id),
-  weapon text NOT NULL
+  weapon text NOT NULL,
+  headshot boolean NOT NULL
 );
 

@@ -29,9 +29,10 @@ public class Round {
         players.get(name).quit(time);
     }
 
-    public void death(String dead, String killername, String weaponname) {
+    public void death(String dead, String killername, String weaponname, String bodypart) {
         Player killer = players.containsKey(killername) ? players.get(killername) : null;
-        deaths.add(new Death(players.get(dead), killer, weaponname));
+        if (killer != null) killer.kills++;
+        deaths.add(new Death(players.get(dead), killer, weaponname, bodypart));
         active = true;
     }
 

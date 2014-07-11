@@ -41,7 +41,7 @@ public class GameLog {
                 currentRound.quit(line[3], time);
                 break;
             case "K":
-                currentRound.death(line[4], line[8], line[9]);
+                currentRound.death(line[4], line[8], line[9], line[12]);
                 break;
             // These are ignored but kept as cases because they're not unknown
             case "D": case "W": case "Weapon": case "say": case "ExitLevel:":
