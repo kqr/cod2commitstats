@@ -48,21 +48,27 @@ public class UpdateStats {
 
                     // update playtime for all players and get their ID
                     stm = postgres.prepareStatement(
-                            "UPDATE players SET playtime=playtime + ? * interval '1 S' " +
+                            "UPDATE players SET (playtime, kills, deaths) = " +
+                            "(playtime + ? * interval '1 S', kills + ?, deaths + ?) " +
                             "WHERE name=? RETURNING id");
                     stm.setInt(1, player.getPlayTime());
-                    stm.setString(2, player.name);
+                    stm.setInt(2, player.kills);
+                    stm.setInt(3, player.deaths);
+                    stm.setString(4, player.name);
                     rs = stm.executeQuery();
                     rs.next();
                     player.id = rs.getInt(1);
 
                     //# Insert for every player in the round
                     stm = postgres.prepareStatement("INSERT INTO roundplayers " +
-                            "(round_id, player_id, playtime, efficacy) VALUES (?, ?, ? * interval '1 S', ?)");
+                            "(round_id, player_id, playtime, efficacy, kills, deaths) VALUES " +
+                            "(?, ?, ? * interval '1 S', ?, ?, ?)");
                     stm.setInt(1, roundid);
                     stm.setInt(2, player.id);
                     stm.setInt(3, player.getPlayTime());
                     stm.setDouble(4, player.efficacy());
+                    stm.setInt(5, player.kills);
+                    stm.setInt(6, player.deaths);
                     stm.executeUpdate();
                 }
 

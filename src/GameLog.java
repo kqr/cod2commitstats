@@ -1,5 +1,7 @@
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Scanner;
@@ -7,8 +9,10 @@ import java.util.Scanner;
 public class GameLog {
     private ArrayDeque<Round> rounds = new ArrayDeque<>();
 
-    public ArrayDeque<Round> getAllRounds() {
-        return rounds;
+    public ArrayList<Round> getAllRounds() {
+        ArrayList<Round> retval = new ArrayList<>(rounds);
+        Collections.reverse(retval);
+        return retval;
     }
 
     public void addLine(final String[] line) throws ParseError {

@@ -5,6 +5,7 @@ public class Player {
     private int timePlayed = 0;
     public int id = -1;
     public int kills;
+    public int deaths;
 
     public Player(String name) {
         this.name = name;

@@ -33,6 +33,7 @@ public class Round {
         Player killer = players.containsKey(killername) ? players.get(killername) : null;
         if (killer != null) killer.kills++;
         deaths.add(new Death(players.get(dead), killer, weaponname, bodypart));
+        players.get(dead).deaths++;
         active = true;
     }
 
