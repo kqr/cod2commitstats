@@ -20,10 +20,6 @@ public class Player {
         joinTime = -1;
     }
 
-    public double efficacy() {
-        return kills*kills*kills / ((double) timePlayed);
-    }
-
     public boolean online() {
         return joinTime > -1;
     }

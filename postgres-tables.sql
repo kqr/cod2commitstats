@@ -23,8 +23,7 @@ CREATE TABLE roundplayers
   player_id int REFERENCES players(id),
   kills int NOT NULL,
   deaths int NOT NULL,
-  playtime interval NOT NULL,
-  efficacy double precision NOT NULL
+  playtime interval NOT NULL
 );
 
 CREATE TABLE deaths
@@ -34,6 +33,7 @@ CREATE TABLE deaths
   dead_id int REFERENCES players(id),
   killer_id int REFERENCES players(id),
   weapon text NOT NULL,
+  killfeed text NOT NULL,
   headshot boolean NOT NULL
 );
 

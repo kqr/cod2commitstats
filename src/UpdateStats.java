@@ -61,20 +61,19 @@ public class UpdateStats {
 
                     //# Insert for every player in the round
                     stm = postgres.prepareStatement("INSERT INTO roundplayers " +
-                            "(round_id, player_id, playtime, efficacy, kills, deaths) VALUES " +
-                            "(?, ?, ? * interval '1 S', ?, ?, ?)");
+                            "(round_id, player_id, playtime, kills, deaths) VALUES " +
+                            "(?, ?, ? * interval '1 S', ?, ?)");
                     stm.setInt(1, roundid);
                     stm.setInt(2, player.id);
                     stm.setInt(3, player.getPlayTime());
-                    stm.setDouble(4, player.efficacy());
-                    stm.setInt(5, player.kills);
-                    stm.setInt(6, player.deaths);
+                    stm.setInt(4, player.kills);
+                    stm.setInt(5, player.deaths);
                     stm.executeUpdate();
                 }
 
                 // Populate the death table
                 stm = postgres.prepareStatement("INSERT INTO deaths " +
-                        "(round_id, dead_id, killer_id, weapon, headshot) VALUES (?, ?, ?, ?, ?)");
+                        "(round_id, dead_id, killer_id, weapon, killfeed, headshot) VALUES (?, ?, ?, ?, ?, ?)");
                 for (Death death : round.getDeaths()) {
                     stm.setInt(1, roundid);
                     stm.setInt(2, death.dead.id);
@@ -84,7 +83,8 @@ public class UpdateStats {
                         stm.setInt(3, death.killer.id);
                     }
                     stm.setString(4, death.weaponname);
-                    stm.setBoolean(5, death.headshot);
+                    stm.setString(5, death.killfeed);
+                    stm.setBoolean(6, death.headshot);
                     stm.addBatch();
                 }
                 stm.executeBatch();
