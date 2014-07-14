@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Properties;
 
 import java.sql.*;
 
@@ -25,9 +26,12 @@ public class UpdateStats {
         PreparedStatement stm = null;
         ResultSet rs = null;
         try {
-            postgres = DriverManager.getConnection(
-                    "jdbc:postgresql://" + args[1] + "/" + args[2],
-                    args[3], args[4]);
+            Properties properties = new Properties();
+            properties.put("user", args[3]);
+            properties.put("password", args[4]);
+            properties.put("ssl", "true");
+            properties.put("sslfactory", "org.postgresql.ssl.NonValidatingFactory");
+            postgres = DriverManager.getConnection("jdbc:postgresql://" + args[1] + "/" + args[2], properties);
 
             for (Round round : log.getAllRounds()) {
                 //# Insert round and get the round ID out
